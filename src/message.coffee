@@ -21,15 +21,15 @@ class Message extends EventEmitter
 
     # Keep track of when this message actually times out.
     @timedOut = false
-    do trackTimeout = =>
-      return if @hasResponded
+    # do trackTimeout = =>
+    #   return if @hasResponded
 
-      soft = @timeUntilTimeout()
-      hard = @timeUntilTimeout true
+    #  soft = @timeUntilTimeout()
+    #  hard = @timeUntilTimeout true
 
       # Both values have to be not null otherwise we've timedout.
-      @timedOut = not soft or not hard
-      setTimeout trackTimeout, Math.min soft, hard unless @timedOut
+    #  @timedOut = not soft or not hard
+    #  setTimeout trackTimeout, Math.min soft, hard unless @timedOut
 
   json: ->
     unless @parsed?
