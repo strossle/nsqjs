@@ -21,6 +21,16 @@ class Message extends EventEmitter
 
     # Keep track of when this message actually times out.
     @timedOut = false
+    do trackTimeoutFunction = =>
+        return if @hasResponded
+
+        soft = @timeUntilTimeout()
+        hard = @timeUntilTimeout true
+
+        # Both values have to be not null otherwise we've timedout.
+        @timedOut = not soft or not hard
+
+        @trackTimeout = setTimeout trackTimeoutFunction, Math.min soft, hard unless @timedOut
 
   json: ->
     unless @parsed?
@@ -59,6 +69,7 @@ class Message extends EventEmitter
     @respond Message.TOUCH, wire.touch @id
 
   respond: (responseType, wireData) ->
+    clearTimeout @trackTimeout if @trackTimeout?
     # TODO: Add a debug/warn when we moved to debug.js
     return if @hasResponded
 
